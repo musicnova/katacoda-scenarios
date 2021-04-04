@@ -4,6 +4,9 @@
 Nginx Python PostgreSQL Django Python Frameworks Ubuntu 18.04 Databases
 
 
+https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-18-04-ru
+
+
 Введение
 Django — это мощная веб-система, помогающая создать приложение или сайт Python с нуля. Django включает упрощенный сервер разработки для локального тестирования кода, однако для серьезных производственных задач требуется более защищенный и мощный веб-сервер.
 
