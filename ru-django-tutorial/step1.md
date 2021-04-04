@@ -160,7 +160,7 @@ nano ~/myprojectdir/myproject/settings.py
 
 Примечание. Обязательно используйте localhost как одну из опций, поскольку мы будем использовать локальный экземпляр Nginx как прокси-сервер.
 `
-sed -i 's#ALLOWED_HOSTS = []#ALLOWED_HOSTS = [*]#g' ~/myprojectdir/myproject/settings.py
+sed -i 's#ALLOWED_HOSTS = \[\]#ALLOWED_HOSTS = \[*\]#g' ~/myprojectdir/myproject/settings.py
 `{{execute}}
 `
 grep -n 'ALLOWED_HOSTS' ~/myprojectdir/myproject/settings.py
