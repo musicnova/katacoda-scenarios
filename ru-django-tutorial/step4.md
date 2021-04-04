@@ -1,20 +1,36 @@
-Let’s write the first view. Open the file `polls/views.py` and put the
-following Python code in it:
+Now that your environment – a “project” – is set up, you’re set to start
+doing work.
 
-```python
-from django.http import HttpResponse
+Each application you write in Django consists of a Python package that
+follows a certain convention. Django comes with a utility that
+automatically generates the basic directory structure of an app, so you
+can focus on writing code rather than creating directories.
 
+---
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+### Projects vs. apps
+
+What’s the difference between a project and an app? An app is a Web
+application that does something – e.g., a Weblog system, a database of
+public records or a simple poll app. A project is a collection of
+configuration and apps for a particular website. A project can contain
+multiple apps. An app can be in multiple projects.
+
+---
+
+Your apps can live anywhere on your Python path. In this tutorial, we’ll
+create our poll app right next to your `manage.py` file so that it can
+be imported as its own top-level module, rather than a submodule of
+`mysite`.
+
+To create your app, make sure you’re in the same directory as `manage.py`
+and type this command:
+
+```
+$ python3 manage.py startapp polls
 ```
 
-This is the simplest view possible in Django. To call the view, we need
-to map it to a URL - and for this we need a URLconf.
-
-To create a URLconf in the `polls` directory, create a file called
-`urls.py` (`$ touch urls.py` if you're in the `polls` directory). Your
-app directory should now look like:
+That’ll create a directory `polls`, which is laid out like this:
 
 ```
 polls/
@@ -25,112 +41,7 @@ polls/
         __init__.py
     models.py
     tests.py
-    urls.py
     views.py
 ```
 
-In the `polls/urls.py` file include the following code:
-
-```python
-from django.urls import path
-
-from . import views
-
-urlpatterns = [
-    path('', views.index, name='index'),
-]
-```
-
-The next step is to point the root URLconf at the `polls.urls` module. In
-`mysite/urls.py`, add an import for `django.urls.include` and insert an
-`include()` in the `urlpatterns` list, so you have:
-
-```python
-from django.contrib import admin
-from django.urls import include, path
-
-urlpatterns = [
-    path('polls/', include('polls.urls')),
-    path('admin/', admin.site.urls),
-]
-```
-
-The `include()` function allows referencing other URLconfs. Whenever
-Django encounters `include()`, it chops off whatever part of the URL
-matched up to that point and sends the remaining string to the included
-URLconf for further processing.
-
-The idea behind `include()` is to make it easy to plug-and-play URLs.
-Since polls are in their own URLconf (`polls/urls.py`), they can be
-placed under `"/polls/"`, or under `"/fun_polls/"`, or under
-`"/content/polls/"`, or any other path root, and the app will still
-work.
-
----
-
-### When to use `include()`
-
-You should always use `include()` when you include other URL patterns.
-`admin.site.urls` is the only exception to this.
-
----
-
-You have now wired an `index` view into the URLconf. Lets verify it’s
-working, run the following command if you've stopped your server:
-
-```
-$ python3 manage.py runserver 0:8000
-```
-
-Unfortunately, we can't change the URL in the **runserver** tab, so
-click the button on that tab that looks like a box with an escaping
-arrow. This should open a new tab in your browser. Now you can change
-the URL so it ends with `/polls/` and you should see the text _“Hello,
-world. You’re at the polls index.”_, which you defined in the `index`
-view.
-
----
-
-### Page not found?
-
-If you get an error page here, check that you’re going to
-https://[[HOST_SUBDOMAIN]]-8000-[[KATACODA_HOST]].environments.katacoda.com/polls/
-and not https://[[HOST_SUBDOMAIN]]-8000-[[KATACODA_HOST]].environments.katacoda.com/.
-
----
-
-The `path()` function is passed four arguments, two required: `route` and
-`view`, and two optional: `kwargs`, and `name`. At this point, it’s worth
-reviewing what these arguments are for.
-
-## `path()` argument: `route`
-
-`route` is a string that contains a URL pattern. When processing a
-request, Django starts at the first pattern in `urlpatterns` and makes its
-way down the list, comparing the requested URL against each pattern
-until it finds one that matches.
-
-Patterns don’t search GET and POST parameters, or the domain name. For
-example, in a request to `https://www.example.com/myapp/`, the URLconf
-will look for `myapp/`. In a request to
-`https://www.example.com/myapp/?page=3`, the URLconf will also look for
-`myapp/`.
-
-## `path()` argument: `view`
-
-When Django finds a matching pattern, it calls the specified view
-function with an `HttpRequest` object as the first argument and any
-“captured” values from the route as keyword arguments. We’ll give an
-example of this in a bit.
-
-## `path()` argument: `kwargs`
-
-Arbitrary keyword arguments can be passed in a dictionary to the target
-view. We aren’t going to use this feature of Django in the tutorial.
-
-## `path()` argument: `name`
-
-Naming your URL lets you refer to it unambiguously from elsewhere in
-Django, especially from within templates. This powerful feature allows
-you to make global changes to the URL patterns of your project while
-only touching a single file.
+This directory structure will house the poll application.

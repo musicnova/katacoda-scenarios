@@ -1,73 +1,76 @@
-Now we’ll define your models – essentially, your database layout, with
-additional metadata.
+Now, open up `mysite/settings.py`. It’s a normal Python module with
+module-level variables representing Django settings.
 
----
+By default, the configuration uses SQLite. If you’re new to databases,
+or you’re just interested in trying Django, this is the easiest choice.
+SQLite is included in Python, so you won’t need to install anything else
+to support your database. When starting your first real project,
+however, you may want to use a more scalable database like PostgreSQL,
+to avoid database-switching headaches down the road.
 
-### Philosophy
+If you wish to use another database, install the appropriate database
+bindings and change the following keys in the `DATABASES` `'default'` item
+to match your database connection settings:
 
-A model is the single, definitive source of truth about your data. It
-contains the essential fields and behaviors of the data you’re storing.
-Django follows the DRY Principle. The goal is to define your data model
-in one place and automatically derive things from it.
+- `ENGINE` – Either `'django.db.backends.sqlite3'`,
+    `'django.db.backends.postgresql'`, `'django.db.backends.mysql'`, or
+    `'django.db.backends.oracle'`. Other backends are also available.
+- `NAME` – The name of your database. If you’re using SQLite, the
+    database will be a file on your computer; in that case, `NAME`
+    should be the full absolute path, including filename, of that file.
+    The default value, `os.path.join(BASE_DIR, 'db.sqlite3')`, will
+    store the file in your project directory.
 
-This includes the migrations - unlike in Ruby On Rails, for example,
-migrations are entirely derived from your models file, and are
-essentially just a history that Django can roll through to update your
-database schema to match your current models.
+If you are not using SQLite as your database, additional settings such
+as `USER`, `PASSWORD`, and `HOST` must be added. For more details, see
+the reference documentation for `DATABASES`.
 
----
+While you’re editing `mysite/settings.py`, set `TIME_ZONE` to your time
+zone.
 
-In our simple poll app, we’ll create two models: `Question` and
-`Choice`. A `Question` has a question and a publication date. A `Choice`
-has two fields: the text of the choice and a vote tally. Each `Choice`
-is associated with a `Question`.
+Also, note the `INSTALLED_APPS` setting at the top of the file. That holds
+the names of all Django applications that are activated in this Django
+instance. Apps can be used in multiple projects, and you can package and
+distribute them for use by others in their projects.
 
-These concepts are represented by simple Python classes. Edit the
-`polls/models.py` file so it looks like this:
+By default, `INSTALLED_APPS` contains the following apps, all of which
+come with Django:
 
-```python
-from django.db import models
+- `django.contrib.admin` – The admin site. You’ll use it shortly.
+- `django.contrib.auth` – An authentication system.
+- `django.contrib.contenttypes` – A framework for content types.
+- `django.contrib.sessions` – A session framework.
+- `django.contrib.messages` – A messaging framework.
+- `django.contrib.staticfiles` – A framework for managing static files.
 
+These applications are included by default as a convenience for the
+common case.
 
-class Question(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
+Some of these applications make use of at least one database table,
+though, so we need to create the tables in the database before we can
+use them. To do that, run the following command:
 
-
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
+```bash
+$ python3 manage.py migrate
 ```
 
-The code is straightforward. Each model is represented by a class that
-subclasses `django.db.models.Model`. Each model has a number of class
-variables, each of which represents a database field in the model.
+The `migrate` command looks at the `INSTALLED_APPS` setting and creates
+any necessary database tables according to the database settings in your
+`mysite/settings.py` file and the database migrations shipped with the
+app (we’ll cover those later). You’ll see a message for each migration
+it applies. If you’re interested, run the command-line client for your
+database and type `\dt` (PostgreSQL), `SHOW TABLES;` (MySQL), `.schema`
+(SQLite), or `SELECT TABLE_NAME FROM USER_TABLES;` (Oracle) to display
+the tables Django created.
 
-Each field is represented by an instance of a `Field` class – e.g.,
-`CharField` for character fields and `DateTimeField` for datetimes. This
-tells Django what type of data each field holds.
+---
 
-The name of each `Field` instance (e.g. `question_text` or `pub_date`)
-is the field’s name, in machine-friendly format. You’ll use this value
-in your Python code, and your database will use it as the column name.
+### For the minimalists
 
-You can use an optional first positional argument to a `Field` to
-designate a human-readable name. That’s used in a couple of
-introspective parts of Django, and it doubles as documentation. If this
-field isn’t provided, Django will use the machine-readable name. In this
-example, we’ve only defined a human-readable name for
-`Question.pub_date`. For all other fields in this model, the field’s
-machine-readable name will suffice as its human-readable name.
+Like we said above, the default applications are included for the common
+case, but not everybody needs them. If you don’t need any or all of
+them, feel free to comment-out or delete the appropriate line(s) from
+`INSTALLED_APPS` before running migrate. The `migrate` command will only
+run migrations for apps in `INSTALLED_APPS`.
 
-Some `Field` classes have required arguments. `CharField`, for example,
-requires that you give it a `max_length`. That’s used not only in the
-database schema, but in validation, as we’ll soon see.
-
-A `Field` can also have various optional arguments; in this case, we’ve
-set the default value of `votes` to `0`.
-
-Finally, note a relationship is defined, using `ForeignKey`. That tells
-Django each `Choice` is related to a single `Question`. Django supports
-all the common database relationships: many-to-one, many-to-many, and
-one-to-one.
+---

@@ -4,35 +4,35 @@
   "details": {
     "steps": [
       { "title": "Reading manual",
-	"text": "step0.md"
+	"text": "step1.md"
       },
       {
         "title": "Creating a project",
-        "text": "step1.md"
-      },
-      {
-        "title": "The development server",
         "text": "step2.md"
       },
       {
-        "title": "Creating the Poll app",
+        "title": "The development server",
         "text": "step3.md"
       },
       {
-        "title": "Write your first view",
+        "title": "Creating the Poll app",
         "text": "step4.md"
       },
       {
-        "title": "Database setup",
+        "title": "Write your first view",
         "text": "step5.md"
       },
       {
-        "title": "Creating models",
+        "title": "Database setup",
         "text": "step6.md"
       },
       {
-        "title": "Activating models",
+        "title": "Creating models",
         "text": "step7.md"
+      },
+      {
+        "title": "Activating models",
+        "text": "step8.md"
       }
     ],
     "intro": {
