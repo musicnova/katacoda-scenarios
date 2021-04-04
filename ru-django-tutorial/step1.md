@@ -413,7 +413,7 @@ sudo touch /etc/systemd/system/gunicorn.socket
 ```
 В этом файле мы создадим раздел [Unit] для описания сокета, раздел [Socket] для определения расположения сокета и раздел [Install], чтобы обеспечить установку сокета в нужное время:
 `
-sudo cat >> /etc/systemd/system/gunicorn.socket << EOF
+sudo bash -c "cat >> /etc/systemd/system/gunicorn.socket " << EOF
 [Unit]
 Description=gunicorn socket
 
@@ -443,7 +443,7 @@ sudo touch /etc/systemd/system/gunicorn.service
 
 Начните с раздела [Unit], предназначенного для указания метаданных и зависимостей. Здесь мы разместим описание службы и предпишем системе инициализации запускать ее только после достижения сетевой цели: Поскольку наша служба использует сокет из файла сокета, нам потребуется директива Requires, чтобы задать это отношение:
 `
-sudo cat >> /etc/systemd/system/gunicorn.service << EOF
+sudo bash -c "cat >> /etc/systemd/system/gunicorn.service " << EOF
 [Unit]
 Description=gunicorn daemon
 Requires=gunicorn.socket
@@ -462,7 +462,7 @@ sudo cat /etc/systemd/system/gunicorn.service
 
 Затем мы составим карту рабочего каталога и зададим команду для запуска службы. В данном случае мы укажем полный путь к исполняемому файлу Gunicorn, установленному в нашей виртуальной среде. Мы привяжем процесс к сокету Unix, созданному в каталоге /run, чтобы процесс мог взаимодействовать с Nginx. Мы будем регистрировать все данные на стандартном выводе, чтобы процесс journald мог собирать журналы Gunicorn. Также здесь можно указать любые необязательные настройки Gunicorn. Например, в данном случае мы задали 3 рабочих процесса:
 `
-sudo cat >> /etc/systemd/system/gunicorn.service << EOF
+sudo bash -c "cat >> /etc/systemd/system/gunicorn.service " << EOF
 [Unit]
 Description=gunicorn daemon
 Requires=gunicorn.socket
@@ -489,7 +489,7 @@ sudo cat /etc/systemd/system/gunicorn.service
 
 Наконец, добавим раздел [Install]. Это покажет systemd, куда привязывать эту службу, если мы активируем ее запуск при загрузке. Нам нужно, чтобы эта служба запускалась во время работы обычной многопользовательской системы:
 `
-sudo cat >> /etc/systemd/system/gunicorn.service << EOF
+sudo bash -c "cat >> /etc/systemd/system/gunicorn.service " << EOF
 [Unit]
 Description=gunicorn daemon
 Requires=gunicorn.socket
@@ -630,7 +630,7 @@ sudo nano /etc/nginx/sites-available/myproject
 ```
 Откройте внутри него новый серверный блок. Вначале мы укажем, что этот блок должен прослушивать обычный порт 80, и что он должен отвечать на доменное имя или IP-адрес нашего сервера:
 `
-sudo cat >> /etc/nginx/sites-available/myproject << EOF
+sudo bash -c "cat >> /etc/nginx/sites-available/myproject " << EOF
 server {
     listen 80;
     server_name server_domain_or_IP;
@@ -646,7 +646,7 @@ sudo cat /etc/nginx/sites-available/myproject
 ```
 Затем мы укажем Nginx игнорировать любые проблемы при поиске favicon. Также мы укажем, где можно найти статичные ресурсы, собранные нами в каталоге ~/myprojectdir/static. Все эти строки имеют стандартный префикс URI «/static», так что мы можем создать блок location для соответствия этим запросам:
 `
-sudo cat >> /etc/nginx/sites-available/myproject << EOF
+sudo bash -c "cat >> /etc/nginx/sites-available/myproject " << EOF
 server {
     listen 80;
     server_name server_domain_or_IP;
@@ -667,7 +667,7 @@ sudo cat /etc/nginx/sites-available/myproject
 ```
 В заключение мы создадим блок location / {} для соответствия всем другим запросам. В этот блок мы включим стандартный файл proxy_params, входящий в комплект установки Nginx, и тогда трафик будет передаваться напрямую на сокет Gunicorn:
 `
-cat >> /etc/nginx/sites-available/myproject << EOF
+sudo bash -c "cat >> /etc/nginx/sites-available/myproject " << EOF
 server {
     listen 80;
     server_name server_domain_or_IP;
