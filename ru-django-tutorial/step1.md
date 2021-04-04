@@ -208,10 +208,16 @@ DATABASES = {
 ```
 Затем перейдите в конец файла и добавьте параметр, указывающий, где следует разместить статичные файлы. Это необходимо, чтобы Nginx мог обрабатывать запросы для этих элементов. Следующая строка указывает Django, что они помещаются в каталог static в базовом каталоге проекта:
 `
+sed -i "s#STATIC_URL = '.*#\# STATIC_URL = #g" ~/myprojectdir/myproject/settings.py
+`{{execute}}
+`
+sed -i "s#STATIC_ROOT = .*#\# STATIC_ROOT = #g" ~/myprojectdir/myproject/settings.py
+`{{execute}}
+`
 echo -e "\nSTATIC_URL = '/static/'" >> ~/myprojectdir/myproject/settings.py
 `{{execute}}
 `
-echo -e "\nSTATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+echo -e "\nSTATIC_ROOT = os.path.join(BASE_DIR, 'static/')" >> ~/myprojectdir/myproject/settings.py
 `{{execute}}
 `
 nano ~/myprojectdir/myproject/settings.py
