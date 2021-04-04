@@ -1,4 +1,4 @@
-# Writing your first Django app
+# Writing your first Jenkins pipeline
 
 Let’s learn by example.
 

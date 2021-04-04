@@ -1,11 +1,13 @@
-We now will create our first Jenkins Pipeline project.
+Once the build has completed you should see the Image and Tags using the Docker CLI `docker images`{{execute}}.
 
-#### Task: Create a Pipeline Workflow
+What was built into the Docker Image was a small HTTP server. You can launch it using:
+`docker run -d -p 80:80 katacoda/jenkins-demo:latest`{{execute}}
 
-1. On the **Jenkins** dashboard, select **create new jobs** under the Welcome message or **new Item* in the sidebar menue.
-2. Give the job a friendly name such as **Pipeline Hello World**, select **Pipeline** and press **OK**.
-3. On the upper right corner of the Pipeline Script Textbox, find the drop-down menue **try sample pipeline...** and choose **GitHub + Maven**
-4. Review the Groovy code. You will see that we will use git for cloning a sample project and we will build the project using the Maven installation we had named "M3".
-5. Click **Save**
+Using cURL you should see the server respond:
+`curl docker`{{execute}}
 
-In the next step, we will try it out.
+Jenkins will have the console output of our build, available via the dashboard. You should be able to access it below:
+
+https://[[HOST_SUBDOMAIN]]-8080-[[KATACODA_HOST]].environments.katacoda.com/job/Katacoda%20Jenkins%20Demo/1/console
+
+If you rebuilt the project, you would see a version 2 image created and the _:latest_ tag reattached.

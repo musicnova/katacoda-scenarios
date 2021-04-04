@@ -1,28 +1,21 @@
-We will prepare an environment with a Jenkins server running as a Docker Container.
+The environment has a Jenkins server running as a Docker Container. You can view the status using `docker ps`{{execute}}.
 
-> Note: steps 1 to 4 can be skipped, if you want to head directly to the pipeline section. We will provide a pre-configured Jenkins image in step 5.
+The command used to launch the container was:
 
-First we start the container in detached mode with a tail to a log file we will create and use later:
-
-`docker run -d -u root --rm --name jenkins \
+`docker run -d -u root --name jenkins \
     -p 8080:8080 -p 50000:50000 \
-    --entrypoint bash \
-    jenkins:2.46.2-alpine \
-    -c "tail -F /jenkins.log"`{{execute}}
-    
-With the next command, we clone a Jenkins Home directory into the container, before we start the Jenkins application. The Jenkins Home directory has been prepared to allow us using Jenkins without any login:
+    -v /root/jenkins:/var/jenkins_home \
+    jenkins:1.651.1-alpine`
 
-`docker exec -d jenkins \
-    bash -c 'git clone https://github.com/oveits/jenkins_home_alpine \
-        && export JENKINS_HOME=$(pwd)/jenkins_home_alpine \
-        && java -jar /usr/share/jenkins/jenkins.war 2>&1 1>/jenkins.log &'`{{execute}}
+    docker run \
+    -p 8080:8080 \
+    -p 50000:50000 \
+    -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
 
-After a minute or so, we should see that the jenkins.war is started:
-
-`docker exec jenkins ps -ef`{{execute}}
+All plugins and configurations get persisted to the host at _/root/jenkins_. Port 8080 opens the web dashboard, 50000 is used to communicate with other Jenkins agents. Finally, the image has an alpine base to reduce the size footprint.
 
 #### Load Dashboard
 
-You can load the Jenkins' dashboard via the following URL https://[[HOST_SUBDOMAIN]]-8080-[[KATACODA_HOST]].environments.katacoda.com/ or by clicking the dashboard tab on the right (note: sometimes, you need to wait a few seconds and press "display port" at this point).
+You can load the Jenkins' dashboard via the following URL https://[[HOST_SUBDOMAIN]]-8080-[[KATACODA_HOST]].environments.katacoda.com/
 
 In the next steps, you'll use the dashboard to configure the plugins and start building Docker Images.

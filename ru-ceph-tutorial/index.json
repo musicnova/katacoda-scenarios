@@ -1,6 +1,6 @@
 {
-  "title": "Django Tutorial",
-  "description": "The Django Tutorial",
+  "title": "Ceph Tutorial",
+  "description": "The Ceph Tutorial",
   "details": {
     "steps": [
       { "title": "Reading manual",
