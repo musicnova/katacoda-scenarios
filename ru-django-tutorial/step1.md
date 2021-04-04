@@ -160,7 +160,10 @@ nano ~/myprojectdir/myproject/settings.py
 
 Примечание. Обязательно используйте localhost как одну из опций, поскольку мы будем использовать локальный экземпляр Nginx как прокси-сервер.
 `
-nano ~/myprojectdir/myproject/settings.py
+sed -i 's#ALLOWED_HOSTS = []#ALLOWED_HOSTS = [*]#g' ~/myprojectdir/myproject/settings.py
+`{{execute}}
+`
+grep -n 'ALLOWED_HOSTS' ~/myprojectdir/myproject/settings.py
 `{{execute}}
 ```
 . . .
@@ -179,7 +182,13 @@ ALLOWED_HOSTS = ['your_server_domain_or_IP', 'second_domain_or_IP', . . ., 'loca
 
 Измените настройки, указав параметры базы данных PostgreSQL. Мы укажем Django использовать адаптер psycopg2, который мы установили вместе с pip. Нам нужно указать имя базы данных, имя пользователя базы данных, пароль пользователя базы данных, и указать, что база данных расположена на локальном компьютере. Вы можете оставить для параметра PORT пустую строку:
 `
-nano ~/myprojectdir/myproject/settings.py
+sed -i "s#'ENGINE': 'django.db.*'#'ENGINE': 'django.db.backends.postgresql_psycopg2'#g" ~/myprojectdir/myproject/settings.py
+`{{execute}}
+`
+sed -i "s#'NAME': '.*#'NAME': 'myproject', 'USER': 'myprojectuser', 'PASSWORD': 'password', 'HOST': 'localhost', 'PORT': ''#g"
+`{{execute}}
+`
+cat ~/myprojectdir/myproject/settings.py
 `{{execute}}
 ```
 . . .
@@ -199,7 +208,13 @@ DATABASES = {
 ```
 Затем перейдите в конец файла и добавьте параметр, указывающий, где следует разместить статичные файлы. Это необходимо, чтобы Nginx мог обрабатывать запросы для этих элементов. Следующая строка указывает Django, что они помещаются в каталог static в базовом каталоге проекта:
 `
-~/myprojectdir/myproject/settings.py
+echo -e "\nSTATIC_URL = '/static/'" >> ~/myprojectdir/myproject/settings.py
+`{{execute}}
+`
+echo -e "\nSTATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+`{{execute}}
+`
+nano ~/myprojectdir/myproject/settings.py
 `{{execute}}
 ```
 . . .
