@@ -185,7 +185,7 @@ ALLOWED_HOSTS = ['your_server_domain_or_IP', 'second_domain_or_IP', . . ., 'loca
 sed -i "s#'ENGINE': 'django.db.*'#'ENGINE': 'django.db.backends.postgresql_psycopg2'#g" ~/myprojectdir/myproject/settings.py
 `{{execute}}
 `
-sed -i "s#'NAME': '.*#'NAME': 'myproject', 'USER': 'myprojectuser', 'PASSWORD': 'password', 'HOST': 'localhost', 'PORT': ''#g"
+sed -i "s#'NAME': '.*#'NAME': 'myproject', 'USER': 'myprojectuser', 'PASSWORD': 'password', 'HOST': 'localhost', 'PORT': ''#g" ~/myprojectdir/myproject/settings.py
 `{{execute}}
 `
 cat ~/myprojectdir/myproject/settings.py
