@@ -1,0 +1,51 @@
+{
+  "title": "Django Tutorial",
+  "description": "The Django Tutorial",
+  "details": {
+    "steps": [
+      {
+        "title": "Creating a project",
+        "text": "step1.md"
+      },
+      {
+        "title": "The development server",
+        "text": "step2.md"
+      },
+      {
+        "title": "Creating the Poll app",
+        "text": "step3.md"
+      },
+      {
+        "title": "Write your first view",
+        "text": "step4.md"
+      },
+      {
+        "title": "Database setup",
+        "text": "step5.md"
+      },
+      {
+        "title": "Creating models",
+        "text": "step6.md"
+      },
+      {
+        "title": "Activating models",
+        "text": "step7.md"
+      }
+    ],
+    "intro": {
+      "courseData": "intro.sh",
+      "text": "intro.md"
+    },
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "environment": {
+    "uilayout": "editor-terminal",
+    "showdashboard": true,
+    "dashboards": [{"name": "runserver", "port": 8000}]
+  },
+  "backend": {
+    "imageid": "ubuntu"
+  }
+}
