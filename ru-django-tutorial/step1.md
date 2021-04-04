@@ -318,7 +318,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 ```
 Создайте административного пользователя проекта с помощью следующей команды:
 `
-~/myprojectdir/manage.py createsuperuser
+echo ~/myprojectdir/manage.py createsuperuser
+`{{execute}}
+```
+```
+`
+~/myprojectdir/manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('myprojectuser', 'myemail@', 'adminpass')"
 `{{execute}}
 ```
 ```
@@ -372,8 +377,10 @@ http://server_domain_or_IP:8000
 `
 cd ~/myprojectdir
 `{{execute}}
+```
+```
 `
-gunicorn --bind 0.0.0.0:8000 myproject.wsgi &
+echo gunicorn --bind 0.0.0.0:8000 myproject.wsgi
 `{{execute}}
 ```
 ```
@@ -400,13 +407,13 @@ deactivate
 
 Создайте и откройте файл сокета systemd для Gunicorn с привилегиями sudo:
 `
-sudo nano /etc/systemd/system/gunicorn.socket
+sudo touch /etc/systemd/system/gunicorn.socket
 `{{execute}}
 ```
 ```
 В этом файле мы создадим раздел [Unit] для описания сокета, раздел [Socket] для определения расположения сокета и раздел [Install], чтобы обеспечить установку сокета в нужное время:
 `
-/etc/systemd/system/gunicorn.socket
+sudo cat >> /etc/systemd/system/gunicorn.socket << EOF
 [Unit]
 Description=gunicorn socket
 
@@ -415,30 +422,47 @@ ListenStream=/run/gunicorn.sock
 
 [Install]
 WantedBy=sockets.target
+EOF
 `{{execute}}
 ```
 ```
+`
+sudo cat /etc/systemd/system/gunicorn.socket
+`{{execute}}
+```
+```
+
 Сохраните файл и закройте его после завершения.
 
 Теперь создайте и откройте служебный файл systemd для Gunicorn в текстовом редакторе с привилегиями sudo. Имя файла службы должно соответствовать имени файла сокета за исключением расширения:
-
-sudo nano /etc/systemd/system/gunicorn.service
+`
+sudo touch /etc/systemd/system/gunicorn.service
+`{{execute}}
+```
+```
 
 Начните с раздела [Unit], предназначенного для указания метаданных и зависимостей. Здесь мы разместим описание службы и предпишем системе инициализации запускать ее только после достижения сетевой цели: Поскольку наша служба использует сокет из файла сокета, нам потребуется директива Requires, чтобы задать это отношение:
 `
-/etc/systemd/system/gunicorn.service
+sudo cat >> /etc/systemd/system/gunicorn.service << EOF
 [Unit]
 Description=gunicorn daemon
 Requires=gunicorn.socket
 After=network.target
+EOF
 `{{execute}}
 ```
 ```
+`
+sudo cat /etc/systemd/system/gunicorn.service
+`{{execute}}
+```
+```
+
 Теперь откроем раздел [Service]. Здесь указываются пользователь и группа, от имени которых мы хотим запустить данный процесс. Мы сделаем владельцем процесса учетную запись обычного пользователя, поскольку этот пользователь является владельцем всех соответствующих файлов. Групповым владельцем мы сделаем группу www-data, чтобы Nginx мог легко взаимодействовать с Gunicorn.
 
 Затем мы составим карту рабочего каталога и зададим команду для запуска службы. В данном случае мы укажем полный путь к исполняемому файлу Gunicorn, установленному в нашей виртуальной среде. Мы привяжем процесс к сокету Unix, созданному в каталоге /run, чтобы процесс мог взаимодействовать с Nginx. Мы будем регистрировать все данные на стандартном выводе, чтобы процесс journald мог собирать журналы Gunicorn. Также здесь можно указать любые необязательные настройки Gunicorn. Например, в данном случае мы задали 3 рабочих процесса:
 `
-/etc/systemd/system/gunicorn.service
+sudo cat >> /etc/systemd/system/gunicorn.service << EOF
 [Unit]
 Description=gunicorn daemon
 Requires=gunicorn.socket
@@ -453,12 +477,19 @@ ExecStart=/home/sammy/myprojectdir/myprojectenv/bin/gunicorn \
           --workers 3 \
           --bind unix:/run/gunicorn.sock \
           myproject.wsgi:application
+EOF
 `{{execute}}
 ```
 ```
+`
+sudo cat /etc/systemd/system/gunicorn.service
+`{{execute}}
+```
+```
+
 Наконец, добавим раздел [Install]. Это покажет systemd, куда привязывать эту службу, если мы активируем ее запуск при загрузке. Нам нужно, чтобы эта служба запускалась во время работы обычной многопользовательской системы:
 `
-/etc/systemd/system/gunicorn.service
+sudo cat >> /etc/systemd/system/gunicorn.service << EOF
 [Unit]
 Description=gunicorn daemon
 Requires=gunicorn.socket
@@ -476,6 +507,7 @@ ExecStart=/home/sammy/myprojectdir/myprojectenv/bin/gunicorn \
 
 [Install]
 WantedBy=multi-user.target
+EOF
 `{{execute}}
 ```
 ```
@@ -484,10 +516,20 @@ WantedBy=multi-user.target
 Теперь мы можем запустить и активировать сокет Gunicorn. Файл сокета /run/gunicorn.sock будет создан сейчас и будет создаваться при загрузке. При подключении к этому сокету systemd автоматически запустит gunicorn.service для его обработки:
 `
 sudo systemctl start gunicorn.socket
+`{{execute}}
+```
+```
+`
 sudo systemctl enable gunicorn.socket
 `{{execute}}
 ```
 ```
+`
+sudo cat /etc/systemd/system/gunicorn.service
+`{{execute}}
+```
+```
+
 Успешность операции можно подтвердить, проверив файл сокета.
 
 Проверка файла сокета Gunicorn
@@ -500,12 +542,13 @@ sudo systemctl status gunicorn.socket
 Затем проверьте наличие файла gunicorn.sock в каталоге /run:
 `
 file /run/gunicorn.sock
-
-Output
-/run/gunicorn.sock: socket
 `{{execute}}
 ```
+Output
+/run/gunicorn.sock: socket
 ```
+
+
 Если команда systemctl status указывает на ошибку, или если в каталоге отсутствует файл gunicorn.sock, это означает, что сокет Gunicorn не удалось создать. Проверьте журналы сокета Gunicorn с помощью следующей команды:
 `
 sudo journalctl -u gunicorn.socket
@@ -520,15 +563,11 @@ sudo journalctl -u gunicorn.socket
 sudo systemctl status gunicorn
 `{{execute}}
 ```
-```
-`
 Output
 ● gunicorn.service - gunicorn daemon
    Loaded: loaded (/etc/systemd/system/gunicorn.service; disabled; vendor preset: enabled)
    Active: inactive (dead)
 Чтобы протестировать механизм активации сокета, установим соединение с сокетом через curl с помощью следующей команды:
-`{{execute}}
-```
 ```
 `
 curl --unix-socket /run/gunicorn.sock localhost
@@ -540,8 +579,6 @@ curl --unix-socket /run/gunicorn.sock localhost
 sudo systemctl status gunicorn
 `{{execute}}
 ```
-```
-`
 Output
 ● gunicorn.service - gunicorn daemon
    Loaded: loaded (/etc/systemd/system/gunicorn.service; disabled; vendor preset: enabled)
@@ -564,7 +601,7 @@ Jul 09 20:00:40 django1 gunicorn[1157]: [2018-07-09 20:00:40 +0000] [1181] [INFO
 Jul 09 20:00:41 django1 gunicorn[1157]:  - - [09/Jul/2018:20:00:41 +0000] "GET / HTTP/1.1" 200 16348 "-" "curl/7.58.0"
 `{{execute}}
 ```
-```
+
 Если результат вывода curl или systemctl status указывают на наличие проблемы, поищите в журналах более подробные данные:
 `
 sudo journalctl -u gunicorn
@@ -574,8 +611,10 @@ sudo journalctl -u gunicorn
 Проверьте файл /etc/systemd/system/gunicorn.service на наличие проблем. Если вы внесли изменения в файл /etc/systemd/system/gunicorn.service, перезагрузите демона, чтобы заново считать определение службы, и перезапустите процесс Gunicorn с помощью следующей команды:
 `
 sudo systemctl daemon-reload
-sudo systemctl restart gunicorn
 `{{execute}}
+`
+sudo systemctl restart gunicorn
+·{{execute}}
 ```
 ```
 Обязательно устраните вышеперечисленные проблемы, прежде чем продолжить.
@@ -591,17 +630,23 @@ sudo nano /etc/nginx/sites-available/myproject
 ```
 Откройте внутри него новый серверный блок. Вначале мы укажем, что этот блок должен прослушивать обычный порт 80, и что он должен отвечать на доменное имя или IP-адрес нашего сервера:
 `
-/etc/nginx/sites-available/myproject
+sudo cat >> /etc/nginx/sites-available/myproject << EOF
 server {
     listen 80;
     server_name server_domain_or_IP;
 }
+EOF
+`{{execute}}
+```
+```
+`
+sudo cat /etc/nginx/sites-available/myproject
 `{{execute}}
 ```
 ```
 Затем мы укажем Nginx игнорировать любые проблемы при поиске favicon. Также мы укажем, где можно найти статичные ресурсы, собранные нами в каталоге ~/myprojectdir/static. Все эти строки имеют стандартный префикс URI «/static», так что мы можем создать блок location для соответствия этим запросам:
 `
-/etc/nginx/sites-available/myproject
+sudo cat >> /etc/nginx/sites-available/myproject << EOF
 server {
     listen 80;
     server_name server_domain_or_IP;
@@ -611,12 +656,18 @@ server {
         root /home/sammy/myprojectdir;
     }
 }
+EOF
+`{{execute}}
+```
+```
+`
+sudo cat /etc/nginx/sites-available/myproject
 `{{execute}}
 ```
 ```
 В заключение мы создадим блок location / {} для соответствия всем другим запросам. В этот блок мы включим стандартный файл proxy_params, входящий в комплект установки Nginx, и тогда трафик будет передаваться напрямую на сокет Gunicorn:
 `
-/etc/nginx/sites-available/myproject
+cat >> /etc/nginx/sites-available/myproject << EOF
 server {
     listen 80;
     server_name server_domain_or_IP;
@@ -631,6 +682,12 @@ server {
         proxy_pass http://unix:/run/gunicorn.sock;
     }
 }
+EOF
+`{{execute}}
+```
+```
+`
+sudo cat /etc/nginx/sites-available/myproject
 `{{execute}}
 ```
 ```
@@ -655,6 +712,10 @@ sudo systemctl restart nginx
 Нам нужна возможность открыть брандмауэр для обычного трафика через порт 80. Поскольку нам больше не потребуется доступ к серверу разработки, мы можем удалить правило и открыть порт 8000:
 `
 sudo ufw delete allow 8000
+`{{execute}}
+```
+```
+`
 sudo ufw allow 'Nginx Full'
 `{{execute}}
 ```
@@ -705,15 +766,11 @@ connect() to unix:/run/gunicorn.sock failed (13: Permission denied)
 namei -l /run/gunicorn.sock
 `{{execute}}
 ```
-```
-`
 Output
 f: /run/gunicorn.sock
 drwxr-xr-x root root /
 drwxr-xr-x root root run
 srw-rw-rw- root root gunicorn.sock
-`{{execute}}
-```
 ```
 Команда выведет права доступа всех компонентов каталога. Изучив права доступа (первый столбец), владельца (второй столбец) и группового владельца (третий столбец), мы можем определить, какой тип доступа разрешен для файла сокета.
 
@@ -723,12 +780,14 @@ srw-rw-rw- root root gunicorn.sock
 
 Django выводит ошибку: «could not connect to server: Connection refused»
 При попытке доступа к частям приложения через браузер Django может вывести сообщение следующего вида:
-
+```
 OperationalError at /admin/login/
 could not connect to server: Connection refused
     Is the server running on host "localhost" (127.0.0.1) and accepting
     TCP/IP connections on port 5432?
+```
 Это означает, что Django не может подключиться к базе данных Postgres. Убедиться в нормальной работе экземпляра Postgres с помощью следующей команды:
+
 `
 sudo systemctl status postgresql
 `{{execute}}
@@ -737,9 +796,13 @@ sudo systemctl status postgresql
 Если он работает некорректно, вы можете запустить его и включить автоматический запуск при загрузке (если эта настройка еще не задана) с помощью следующей команды:
 `
 sudo systemctl start postgresql
+`{{execute}}
+```
+```
+`
 sudo systemctl enable postgresql
 `{{execute}}
-``
+```
 ```
 Если проблемы не исчезнут, проверьте правильность настроек базы данных, заданных в файле ~/myprojectdir/myproject/settings.py.
 
@@ -748,11 +811,36 @@ sudo systemctl enable postgresql
 
 Следующие журналы могут быть полезными:
 
-Проверьте журналы процессов Nginx с помощью команды: sudo journalctl -u nginx
-Проверьте журналы доступа Nginx с помощью команды: sudo less /var/log/nginx/access.log
-Проверьте журналы ошибок Nginx с помощью команды: sudo less /var/log/nginx/error.log
-Проверьте журналы приложения Gunicorn с помощью команды: sudo journalctl -u gunicorn
-Проверьте журналы сокета Gunicorn с помощью команды: sudo journalctl -u gunicorn.socket
+Проверьте журналы процессов Nginx с помощью команды: 
+`
+sudo journalctl -u nginx
+`{{execute}}
+```
+```
+Проверьте журналы доступа Nginx с помощью команды: 
+`
+sudo less /var/log/nginx/access.log
+`{{execute}}
+```
+```
+Проверьте журналы ошибок Nginx с помощью команды: 
+`
+sudo less /var/log/nginx/error.log
+`{{execute}}
+```
+```
+Проверьте журналы приложения Gunicorn с помощью команды: 
+`
+sudo journalctl -u gunicorn
+`{{execute}}
+```
+```
+Проверьте журналы сокета Gunicorn с помощью команды:
+`
+sudo journalctl -u gunicorn.socket
+`{{execute}}
+```
+```
 При обновлении конфигурации или приложения вам может понадобиться перезапустить процессы для адаптации к изменениям.
 
 Если вы обновите свое приложение Django, вы можете перезапустить процесс Gunicorn для адаптации к изменениям с помощью следующей команды:
@@ -764,6 +852,10 @@ sudo systemctl restart gunicorn
 Если вы измените файл сокета или служебные файлы Gunicorn, перезагрузите демона и перезапустите процесс с помощью следующей команды:
 `
 sudo systemctl daemon-reload
+`{{execute}}
+```
+```
+`
 sudo systemctl restart gunicorn.socket gunicorn.service
 `{{execute}}
 ```
