@@ -342,11 +342,14 @@ sudo ufw allow 8000
 ```
 Теперь вы можете протестировать ваш проект, запустив сервер разработки Django с помощью следующей команды:
 `
-~/myprojectdir/manage.py runserver 0.0.0.0:8000
+~/myprojectdir/manage.py runserver 0.0.0.0:8000 &
 `{{execute}}
 ```
 ```
 Откройте в браузере доменное имя или IP-адрес вашего сервера с суффиксом :8000:
+`
+echo 'Click runserver or open https://2886795289-8000-simba08.environments.katacoda.com/'
+`{{execute}}
 ```
 http://server_domain_or_IP:8000
 ```
@@ -368,7 +371,9 @@ http://server_domain_or_IP:8000
 Перед выходом из виртуальной среды нужно протестировать способность Gunicorn обслуживать приложение. Для этого нам нужно войти в каталог нашего проекта и использовать gunicorn для загрузки модуля WSGI проекта:
 `
 cd ~/myprojectdir
-gunicorn --bind 0.0.0.0:8000 myproject.wsgi
+`{{execute}}
+`
+gunicorn --bind 0.0.0.0:8000 myproject.wsgi &
 `{{execute}}
 ```
 ```
