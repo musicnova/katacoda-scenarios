@@ -34,15 +34,15 @@ Django — это мощная веб-система, помогающая со�
 `
 sudo apt update`{{execute}}
 `
-sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib nginx curl
+sudo apt -y install python3-pip python3-dev libpq-dev postgresql postgresql-contrib nginx curl
 `{{execute}}
 Версия Django 1.11 — последняя версия Django с поддержкой Python 2. Если вы создаете новый проект, мы настоятельно рекомендуем использовать Python 3. Если вам необходимо использовать Python 2, введите:
-`
+```
 sudo apt update
-`{{execute}}
-`
+```
+```
 sudo apt install python-pip python-dev libpq-dev postgresql postgresql-contrib nginx curl
-`{{execute}}
+```
 Эта команда устанавливает pip, файлы разработки Python для последующего построения сервера Gunicorn, СУБД Postgres и необходимые для взаимодействия с ней библиотеки, а также веб-сервер Nginx.
 
 Создание базы данных и пользователя PostgreSQL
