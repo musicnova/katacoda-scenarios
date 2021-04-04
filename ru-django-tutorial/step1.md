@@ -20,17 +20,17 @@ Django — это мощная веб-система, помогающая со�
 Для прохождения этого обучающего модуля вам потребуется новый экземпляр сервера Ubuntu 18.04 с базовым брандмауэром и пользователем с привилегиями sudo и без привилегий root. Чтобы узнать, как настроить такой сервер, воспользуйтесь нашим модулем Руководство по начальной настройке сервера.
 
 `
-sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' 'YOUR_PASSWORD') username
+sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' 'YOUR_PASSWORD') myprojectuser
 `{{execute}}
 ```
 ```
 `
-sudo usermod -a -G sudo username
+sudo usermod -a -G sudo myprojectuser
 `{{execute}}
 ```
 ```
 `
-su - username
+su - myprojectuser
 `{{execute}}
 
 Мы будем устанавливать Django в виртуальной среде. Установка Django в отдельную среду проекта позволит отдельно обрабатывать проекты и их требования.
@@ -245,7 +245,7 @@ sed -i "s#'ENGINE': 'django.db.*'#'ENGINE': 'django.db.backends.postgresql_psyco
 ```
 ```
 `
-sed -i "s#'NAME': '.*#'NAME': 'myproject', 'USER': 'myprojectuser', 'PASSWORD': 'password', 'HOST': 'localhost', 'PORT': ''#g" ~/myprojectdir/myproject/settings.py
+sed -i "s#'NAME': os.path.join(BASE_DIR.*#'NAME': 'myproject', 'USER': 'myprojectuser', 'PASSWORD': 'password', 'HOST': 'localhost', 'PORT': ''#g" ~/myprojectdir/myproject/settings.py
 `{{execute}}
 ```
 ```
