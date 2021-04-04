@@ -3,6 +3,9 @@
   "description": "The Django Tutorial",
   "details": {
     "steps": [
+      { "title": "Reading manual",
+	"text": "step0.md"
+      },
       {
         "title": "Creating a project",
         "text": "step1.md"
