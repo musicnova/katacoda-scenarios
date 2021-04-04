@@ -1,53 +1,54 @@
 {
-    "icon":"fa-jenkins",
-    "pathwayTitle": "Jenkins",
-    "title": "Building Docker Images using Jenkins",
-    "description": "Learn how to configure Jenkins to build Docker Images",
-    "difficulty": "Advanced",
-    "time": "15-20 minutes",
-    "details": {
-        "steps": [
-            {
-                "title": "Launch Jenkins",
-                "text": "step1.md"
-            },
-            {
-                "title": "Configure Docker Plugin",
-                "text": "step2.md"
-            },
-            {
-                "title": "Add Docker Agent",
-                "text": "step3.md"
-            },
-            {
-                "title": "Create Build Project",
-                "text": "step4.md"
-            },
-            {
-                "title": "Build Project",
-                "text": "step5.md"
-            },
-            {
-                "title": "View Console Output",
-                "text": "step6.md"
-            }
-        ],
-        "intro": {
-            "text": "intro.md",
-            "code": "env-init.sh",
-        },
-        "finish": {
-            "text": "finish.md"
-        }
+  "title": "Ceph Tutorial",
+  "description": "The Ceph Tutorial",
+  "details": {
+    "steps": [
+      { "title": "Reading manual",
+	"text": "step1.md"
+      },
+      {
+        "title": "Creating a project",
+        "text": "step2.md"
+      },
+      {
+        "title": "The development server",
+        "text": "step3.md"
+      },
+      {
+        "title": "Creating the Poll app",
+        "text": "step4.md"
+      },
+      {
+        "title": "Write your first view",
+        "text": "step5.md"
+      },
+      {
+        "title": "Database setup",
+        "text": "step6.md"
+      },
+      {
+        "title": "Creating models",
+        "text": "step7.md"
+      },
+      {
+        "title": "Activating models",
+        "text": "step8.md"
+      }
+    ],
+    "intro": {
+      "courseData": "intro.sh",
+      "text": "intro.md"
     },
-    "environment": {
-        "showdashboard": true,
-        "dashboard": "Dashboard",
-        "uilayout": "terminal-iframe",
-        "uimessage1": "\u001b[32mYour Interactive Bash Terminal.\u001b[m\r\n"
-    },
-    "backend": {
-        "imageid": "docker",
-        "port": 8080
+    "finish": {
+      "text": "finish.md"
     }
+  },
+  "environment": {
+    "uilayout": "editor-terminal",
+    "showdashboard": true,
+    "dashboards": [{"name": "runserver", "port": 8000}]
+  },
+  "backend": {
+    "imageid": "ubuntu"
+  }
 }
