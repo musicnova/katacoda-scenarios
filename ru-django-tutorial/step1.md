@@ -461,7 +461,8 @@ sudo cat /etc/systemd/system/gunicorn.service
 Теперь откроем раздел [Service]. Здесь указываются пользователь и группа, от имени которых мы хотим запустить данный процесс. Мы сделаем владельцем процесса учетную запись обычного пользователя, поскольку этот пользователь является владельцем всех соответствующих файлов. Групповым владельцем мы сделаем группу www-data, чтобы Nginx мог легко взаимодействовать с Gunicorn.
 
 Затем мы составим карту рабочего каталога и зададим команду для запуска службы. В данном случае мы укажем полный путь к исполняемому файлу Gunicorn, установленному в нашей виртуальной среде. Мы привяжем процесс к сокету Unix, созданному в каталоге /run, чтобы процесс мог взаимодействовать с Nginx. Мы будем регистрировать все данные на стандартном выводе, чтобы процесс journald мог собирать журналы Gunicorn. Также здесь можно указать любые необязательные настройки Gunicorn. Например, в данном случае мы задали 3 рабочих процесса:
-
+```
+```
 `
 sudo bash -c "cat >> /etc/systemd/system/gunicorn.service " << EOF
 [Unit]
@@ -473,10 +474,10 @@ After=network.target
 User=sammy
 Group=www-data
 WorkingDirectory=/home/sammy/myprojectdir
-ExecStart=/home/sammy/myprojectdir/myprojectenv/bin/gunicorn \
-          --access-logfile - \
-          --workers 3 \
-          --bind unix:/run/gunicorn.sock \
+ExecStart=/home/sammy/myprojectdir/myprojectenv/bin/gunicorn \\
+          --access-logfile - \\
+          --workers 3 \\
+          --bind unix:/run/gunicorn.sock \\
           myproject.wsgi:application
 EOF
 `{{execute}}
@@ -489,6 +490,8 @@ sudo cat /etc/systemd/system/gunicorn.service
 ```
 
 Наконец, добавим раздел [Install]. Это покажет systemd, куда привязывать эту службу, если мы активируем ее запуск при загрузке. Нам нужно, чтобы эта служба запускалась во время работы обычной многопользовательской системы:
+```
+```
 `
 sudo bash -c "cat >> /etc/systemd/system/gunicorn.service " << EOF
 [Unit]
@@ -500,10 +503,10 @@ After=network.target
 User=sammy
 Group=www-data
 WorkingDirectory=/home/sammy/myprojectdir
-ExecStart=/home/sammy/myprojectdir/myprojectenv/bin/gunicorn \
-          --access-logfile - \
-          --workers 3 \
-          --bind unix:/run/gunicorn.sock \
+ExecStart=/home/sammy/myprojectdir/myprojectenv/bin/gunicorn \\
+          --access-logfile - \\
+          --workers 3 \\
+          --bind unix:/run/gunicorn.sock \\
           myproject.wsgi:application
 
 [Install]
