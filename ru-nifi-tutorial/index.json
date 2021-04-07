@@ -1,6 +1,6 @@
 {
-	"title": "mesosctl",
-	"description": "An introduction to the usage of mesosctl. Provision you first Mesos cluster with a few simple commands!",
+	"title": "Apache NiFi Tutorial",
+	"description": "В разработке",
 	"backend": {
 		"imageid": "coreos-cluster2"
 	},
