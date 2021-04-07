@@ -1,5 +1,5 @@
-To start mesosctl, run `./mesosctl`{{execute}}.
+To start mesosccl, run `./mesosccl`{{execute}}.
 
-This will download the latest mesosctl Docker image, and start it afterwards.
+This will download the latest mesosccl Docker image, and start it afterwards.
 
 

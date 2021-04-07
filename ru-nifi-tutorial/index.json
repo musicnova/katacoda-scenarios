@@ -19,7 +19,7 @@
 	},
 	"details": {
 		"steps": [{
-			"title": "Start mesosctl",
+			"title": "Start mesos",
 			"text": "step1.md"
 		}, {
 			"title": "Load default configuration",
