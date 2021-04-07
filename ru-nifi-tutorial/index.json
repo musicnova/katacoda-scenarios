@@ -1,0 +1,51 @@
+{
+	"title": "mesosctl",
+	"description": "An introduction to the usage of mesosctl. Provision you first Mesos cluster with a few simple commands!",
+	"backend": {
+		"imageid": "coreos-cluster2"
+	},
+	"environment": {
+		"uilayout": "terminal",
+		"showdashboard": true,
+		"dashboards": [{
+			"name": "Mesos",
+			"port": 5050,
+			"host": "HOST2"
+		}, {
+			"name": "Marathon",
+			"port": 8080,
+			"host": "HOST2"
+		}]
+	},
+	"details": {
+		"steps": [{
+			"title": "Start mesosctl",
+			"text": "step1.md"
+		}, {
+			"title": "Load default configuration",
+			"text": "step2.md"
+		}, {
+			"title": "Show and validate configuration",
+			"text": "step3.md"
+		}, {
+			"title": "Provision cluster",
+			"text": "step4.md"
+		}, {
+			"title": "Launch nginx application ",
+			"text": "step5.md"
+		}, {
+			"title": "Explore commands",
+			"text": "step6.md"
+		}, {
+			"title": "Install DC/OS universe (version 2)",
+			"text": "step7.md"
+		}],
+		"intro": {
+			"courseData": "intro.sh",
+			"text": "intro.md"
+		},
+		"finish": {
+			"text": "finish.md"
+		}
+	}
+}
