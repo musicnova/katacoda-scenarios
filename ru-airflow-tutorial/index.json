@@ -1,6 +1,6 @@
 {
   "pathwayTitle": "Airflow Cluster on Kubernetes",
-  "title": "Airflow Cluster on Kubernetes",
+  "title": "[DEBUG] Airflow Cluster on Kubernetes",
   "description": "Apache Airflow - workflow менеджер, для разработки, планирования и мониторинга batch-процессов.",
   "difficulty":	"Introduction",
   "time":	"10 minutes",
