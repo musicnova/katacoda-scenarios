@@ -1,10 +1,21 @@
 Настройка Flume в CentOs 7
 
 
-https://data-flair.training/blogs/apache-flume-installation-tutorial/
-
 
 https://www.digitalocean.com/community/tutorials/how-to-install-java-on-centos-and-fedora
+
+```
+[myprojectuser@ddcb3b39bb4c ~]$ ~/apache-flume-1.9.0-bin/bin/flume-ng version
+Error: Unable to find java executable. Is it in your PATH?
+```
+`
+yum -y install java-1.8.0-openjdk
+`{execute}
+```
+```
+
+
+https://data-flair.training/blogs/apache-flume-installation-tutorial/
 
 
 Введение
@@ -33,11 +44,6 @@ Flume Installation Prerequisite
 1. For installing Apache Flume we must have Hadoop installed and configured on our system.
 
 2. Java must also be installed on your system.
-
-```
-[myprojectuser@ddcb3b39bb4c ~]$ ~/apache-flume-1.9.0-bin/bin/flume-ng version
-Error: Unable to find java executable. Is it in your PATH?
-```
 
 If Hadoop is not installed on your system, then you can refer to the Hadoop 3 installation article to install Hadoop.
 
