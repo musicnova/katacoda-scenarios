@@ -36,6 +36,12 @@ If Hadoop is not installed on your system, then you can refer to the Hadoop 3 in
 Step-by-step guide for Flume installation on Ubuntu
 1. First we have to download Apache Flume 1.9.0. So let’s Download Apache Flume.
 
+`
+wget http://www.apache.org/dyn/closer.lua/flume/1.9.0/apache-flume-1.9.0-bin.tar.gz
+`{execute}
+```
+```
+
 2. Locate the tar file that you have downloaded.
 
 Unmute
