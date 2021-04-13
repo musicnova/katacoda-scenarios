@@ -1,6 +1,6 @@
 {
-  "title": "centos-vm",
-  "description": "test centos-vm",
+  "title": "ru-flume-tutorial",
+  "description": "Flume tutorial on CentOS",
   "difficulty": "beginner",
   "time": "60 minutes",
   "details": {
