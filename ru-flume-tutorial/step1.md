@@ -11,7 +11,7 @@ sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' 'YOUR_PASSWORD'
 ```
 ```
 `
-sudo usermod -a -G sudo myprojectuser
+sudo usermod -a -G wheel myprojectuser
 `{{execute}}
 ```
 ```
