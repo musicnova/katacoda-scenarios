@@ -4,6 +4,9 @@
 https://data-flair.training/blogs/apache-flume-installation-tutorial/
 
 
+https://www.digitalocean.com/community/tutorials/how-to-install-java-on-centos-and-fedora
+
+
 Введение
 `
 sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' 'YOUR_PASSWORD') myprojectuser
