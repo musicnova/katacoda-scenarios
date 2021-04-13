@@ -1,13 +1,10 @@
-Настройка Flask с Postgres, Nginx и Gunicorn в Ubuntu 18.04
+Настройка Kafka с Postgres, Nginx и Gunicorn в CentOS 7
 
 
-How To Set Up Flask with Postgres, Nginx, and Gunicorn on CentOS 7
+How To Set Up Kafka with Postgres, Nginx, and Gunicorn on CentOS 7
 
 
-https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-centos-7
-
-
-https://www.katacoda.com/kennethlove/scenarios/django-tutorial
+https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-centos-7
 
 
 Введение
