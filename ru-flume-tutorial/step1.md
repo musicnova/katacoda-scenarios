@@ -37,7 +37,7 @@ Step-by-step guide for Flume installation on Ubuntu
 1. First we have to download Apache Flume 1.9.0. So let’s Download Apache Flume.
 
 `
-wget http://www.apache.org/dyn/closer.lua/flume/1.9.0/apache-flume-1.9.0-bin.tar.gz
+wget https://downloads.apache.org/flume/1.9.0/apache-flume-1.9.0-bin.tar.gz
 `{execute}
 ```
 ```
@@ -50,8 +50,11 @@ VDO.AI
 .locating-flume-tar-flume-installation
 
 3. Extract the tar file using the below command:
+`
 tar xzf apache-flume-1.9.0-bin.tar.gz
-
+`{execute}
+```
+```
 extract-flume-tar
 
 Now we have successfully extracted apache-flume-1.9.0-bin.tar.gz. Use ls command to enlist files and directories.
