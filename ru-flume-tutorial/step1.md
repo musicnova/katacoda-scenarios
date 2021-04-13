@@ -31,6 +31,11 @@ Flume Installation Prerequisite
 
 2. Java must also be installed on your system.
 
+```
+[myprojectuser@ddcb3b39bb4c ~]$ ~/apache-flume-1.9.0-bin/bin/flume-ng version
+Error: Unable to find java executable. Is it in your PATH?
+```
+
 If Hadoop is not installed on your system, then you can refer to the Hadoop 3 installation article to install Hadoop.
 
 Step-by-step guide for Flume installation on Ubuntu
