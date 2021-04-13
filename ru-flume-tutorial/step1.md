@@ -66,9 +66,21 @@ viewing extracted files
 opening .bashrc file flume
 
 Add below parameters in the .bashrc file.
-
-
-
+`
+echo "export FLUME_HOME=/home/myprojectuser/apache-flume-1.9.0-bin" >> ~/.bashrc
+`{execute}
+```
+```
+`
+echo "export PATH=$PATH:$FLUME_HOME/bin" >> ~/.bashrc
+`{execute}
+```
+```
+`
+source ~/.bashrc
+`
+```
+```
 
 export FLUME_HOME=/home/dataflair/apache-flume-1.9.0-bin
 export PATH=$PATH:$FLUME_HOME/bin
