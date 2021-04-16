@@ -117,6 +117,22 @@ sudo vi /etc/systemd/system/zookeeper.service
 Enter the following unit definition into the file:
 
 /etc/systemd/system/zookeeper.service
+```
+[Unit]
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+User=kafka
+ExecStart=/home/kafka/kafka/bin/zookeeper-server-start.sh /home/kafka/kafka/config/zookeeper.properties
+ExecStop=/home/kafka/kafka/bin/zookeeper-server-stop.sh
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
+```
+
 [Unit]
 Requires=network.target remote-fs.target
 After=network.target remote-fs.target
