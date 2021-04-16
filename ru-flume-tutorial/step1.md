@@ -1,5 +1,11 @@
 Настройка OpenJDK 8 в CentOs 7
 
+`
+sudo yum -y install gem
+`{execute}
+```
+```
+
 
 https://www.digitalocean.com/community/tutorials/how-to-install-java-on-centos-and-fedora#install-openjdk-8
 
