@@ -32,43 +32,61 @@ Since Kafka can handle requests over a network, you should create a dedicated us
 
 Logged in as your non-root sudo user, create a user called kafka with the useradd command:
 
+`
+sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' 'YOUR_PASSWORD') kafka
+`{execute}
+```
 sudo useradd kafka -m
- 
+```
 The -m flag ensures that a home directory will be created for the user. This home directory, /home/kafka, will act as our workspace directory for executing commands in the sections below.
 
 Set the password using passwd:
-
+```
 sudo passwd kafka
- 
+```
 Add the kafka user to the wheel group with the adduser command, so that it has the privileges required to install Kafka’s dependencies:
-
+`
+sudo usermod -a -G wheel kafka
+`
+```
 sudo usermod -aG wheel kafka
- 
+```
 Your kafka user is now ready. Log into this account using su:
-
+`
 su -l kafka
- 
+`{execute}
+```
+```
 Now that we’ve created the Kafka-specific user, we can move on to downloading and extracting the Kafka binaries.
 
 Step 2 — Downloading and Extracting the Kafka Binaries
 Let’s download and extract the Kafka binaries into dedicated folders in our kafka user’s home directory.
 
 To start, create a directory in /home/kafka called Downloads to store your downloads:
-
+`
 mkdir ~/Downloads
- 
+`{execute}
+```
+```
 Use curl to download the Kafka binaries:
-
-curl "https://www.apache.org/dist/kafka/2.1.1/kafka_2.11-2.1.1.tgz" -o ~/Downloads/kafka.tgz
- 
+`
+curl "https://archive.apache.org/dist/kafka/2.1.1/kafka_2.11-2.1.1.tgz" -o ~/Downloads/kafka.tgz
+`{execute}
+```
+```
 Create a directory called kafka and change to this directory. This will be the base directory of the Kafka installation:
-
+`
 mkdir ~/kafka && cd ~/kafka
- 
+`{execute}
+```
+```
 Extract the archive you downloaded using the tar command:
-
+`
 tar -xvzf ~/Downloads/kafka.tgz --strip 1
- 
+`{execute}
+```
+```
+
 We specify the --strip 1 flag to ensure that the archive’s contents are extracted in ~/kafka/ itself and not in another directory (such as ~/kafka/kafka_2.11-2.1.1/) inside of it.
 
 Now that we’ve downloaded and extracted the binaries successfully, we can move on configuring to Kafka to allow for topic deletion.
