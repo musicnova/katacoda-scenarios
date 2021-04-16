@@ -160,6 +160,23 @@ sudo vi /etc/systemd/system/kafka.service
 Enter the following unit definition into the file:
 
 /etc/systemd/system/kafka.service
+```
+[Unit]
+Requires=zookeeper.service
+After=zookeeper.service
+
+[Service]
+Type=simple
+User=kafka
+ExecStart=/bin/sh -c '/home/kafka/kafka/bin/kafka-server-start.sh /home/kafka/kafka/config/server.properties > /home/kafka/kafka/kafka.lo
+g 2>&1'
+ExecStop=/home/kafka/kafka/bin/kafka-server-stop.sh
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
+```
+
 [Unit]
 Requires=zookeeper.service
 After=zookeeper.service
