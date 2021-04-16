@@ -10,7 +10,7 @@ This section will show you how to install the prebuilt OpenJDK 8 JRE and JDK pac
 Install OpenJDK 8 JRE
 To install OpenJDK 8 JRE using yum, run this command:
 
-sudo yum install java-1.8.0-openjdk
+sudo yum -y install java-1.8.0-openjdk
  
 At the confirmation prompt, enter y then RETURN to continue with the installation.
 
@@ -20,7 +20,7 @@ Install OpenJDK 8 JDK
 To install OpenJDK 8 JDK using yum, run this command:
 
 `
-sudo yum install java-1.8.0-openjdk-devel
+sudo yum -y install java-1.8.0-openjdk-devel
 `{execute}
 ```
 ```
@@ -149,9 +149,16 @@ In this section, we will create systemd unit files for the Kafka service. This w
 Zookeeper is a service that Kafka uses to manage its cluster state and configurations. It is commonly used in many distributed systems as an integral component. If you would like to know more about it, visit the official Zookeeper docs.
 
 Create the unit file for zookeeper:
-
-sudo vi /etc/systemd/system/zookeeper.service
- 
+`
+exit
+`{execute}
+```
+```
+`
+vi /etc/systemd/system/zookeeper.service
+`{execute}
+```
+```
 Enter the following unit definition into the file:
 
 /etc/systemd/system/zookeeper.service
@@ -192,9 +199,11 @@ The [Service] section specifies that systemd should use the zookeeper-server-sta
 Save and close the file when you are finished editing.
 
 Next, create the systemd service file for kafka:
-
-sudo vi /etc/systemd/system/kafka.service
- 
+`
+vi /etc/systemd/system/kafka.service
+`{execute}
+```
+```
 Enter the following unit definition into the file:
 
 /etc/systemd/system/kafka.service
