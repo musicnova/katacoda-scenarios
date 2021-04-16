@@ -1,3 +1,35 @@
+Настройка OpenJDK 8 в CentOs 7
+
+
+https://www.digitalocean.com/community/tutorials/how-to-install-java-on-centos-and-fedora#install-openjdk-8
+
+
+Install OpenJDK 8
+This section will show you how to install the prebuilt OpenJDK 8 JRE and JDK packages using the yum package manager, which is similar to apt-get for Ubuntu/Debian. OpenJDK 8 is the latest version of OpenJDK.
+
+Install OpenJDK 8 JRE
+To install OpenJDK 8 JRE using yum, run this command:
+
+sudo yum install java-1.8.0-openjdk
+ 
+At the confirmation prompt, enter y then RETURN to continue with the installation.
+
+Congratulations! You have installed OpenJDK 8 JRE.
+
+Install OpenJDK 8 JDK
+To install OpenJDK 8 JDK using yum, run this command:
+
+`
+sudo yum install java-1.8.0-openjdk-devel
+`{execute}
+```
+```
+
+At the confirmation prompt, enter y then RETURN to continue with the installation.
+
+Congratulations! You have installed OpenJDK 8 JDK.
+
+
 Настройка Kafka в CentOs 7
 
 
