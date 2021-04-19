@@ -14,17 +14,20 @@ sudo yum -y install java-1.8.0-openjdk-devel
 `
 sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' 'YOUR_PASSWORD') mykafkauser
 `{execute}
-
 ```
-sudo useradd mykafkauser -m
 ```
 `
-sudo usermod -a -G wheel kafka
+sudo useradd mykafkauser -m
 `{execute}
 ```
 ```
 `
-su -l kafka
+sudo usermod -a -G wheel mykafkauser
+`{execute}
+```
+```
+`
+su -l mykafkauser
 `{execute}
 ```
 ```
@@ -39,7 +42,7 @@ curl "https://archive.apache.org/dist/kafka/2.1.1/kafka_2.11-2.1.1.tgz" -o ~/Dow
 ```
 ```
 `
-mkdir ~/kafka && cd ~/kafka
+mkdir ~/mykafka && cd ~/mykafka
 `{execute}
 ```
 ```
@@ -49,7 +52,7 @@ tar -xvzf ~/Downloads/kafka.tgz --strip 1
 ```
 ```
 `
-cat < EOF >> ~/mykafkauser/config/server.properties
+cat < EOF >> ~/mykafka/config/server.properties
 
 delete.topic.enable = true
 
@@ -71,8 +74,8 @@ After=network.target remote-fs.target
 [Service]
 Type=simple
 User=kafka
-ExecStart=/home/kafka/kafka/bin/zookeeper-server-start.sh /home/kafka/kafka/config/zookeeper.properties
-ExecStop=/home/kafka/kafka/bin/zookeeper-server-stop.sh
+ExecStart=/home/mykafkauser/mykafka/bin/zookeeper-server-start.sh /home/mykafkauser/mykafka/config/zookeeper.properties
+ExecStop=/home/mykafkauser/mykafka/bin/zookeeper-server-stop.sh
 Restart=on-abnormal
 
 [Install]
@@ -96,8 +99,8 @@ After=zookeeper.service
 [Service]
 Type=simple
 User=kafka
-ExecStart=/bin/sh -c '/home/kafka/kafka/bin/kafka-server-start.sh /home/kafka/kafka/config/server.properties > /home/kafka/kafka/kafka.log 2>&1'
-ExecStop=/home/kafka/kafka/bin/kafka-server-stop.sh
+ExecStart=/bin/sh -c '/home/mykafkauser/mykafka/bin/kafka-server-start.sh /home/mykafkauser/mykafka/config/server.properties > /home/kafka/kafka/kafka.log 2>&1'
+ExecStop=/home/mykafkauser/mykafka/bin/kafka-server-stop.sh
 Restart=on-abnormal
 
 [Install]
@@ -158,12 +161,4 @@ EOF
 kafkat partitions
 `{execute}
 ```
-
-Output
-Topic                 Partition   Leader      Replicas        ISRs    
-TutorialTopic         0             0         [0]             [0]
-__consumer_offsets    0             0         [0]                           [0]
-...
-...
 ```
-
