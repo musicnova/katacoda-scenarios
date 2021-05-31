@@ -5,16 +5,14 @@ https://www.digitalocean.com/community/tutorials/how-to-install-hadoop-in-stand-
 
 https://gist.github.com/darcyliu/d47edccb923b0f03280a4cf8b66227c1
 
-`
-yum install java -y
-`{execute}
+
+`yum install java -y`{execute}
 
 ```
 ```
 
-`
-wget http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.tgz
-`{execute}
+
+`wget http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.tgz`{execute}
 
 ```
 ```
@@ -78,6 +76,13 @@ export SPARK_HOME=$HOME/spark-1.6.0-bin-hadoop2.6
 `
 export PATH=$PATH:$SPARK_HOME/bin
 `{execute}
+
+```
+```
+
+`
+service firewalld restart
+`
 
 ```
 ```
