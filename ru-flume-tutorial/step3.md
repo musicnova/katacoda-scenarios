@@ -6,203 +6,128 @@ https://www.digitalocean.com/community/tutorials/how-to-install-hadoop-in-stand-
 https://gist.github.com/darcyliu/d47edccb923b0f03280a4cf8b66227c1
 
 `
-sudo yum -y install gem
+yum install java -y
 `{execute}
 
 ```
 ```
 
 `
-sudo yum -y install java-1.8.0-openjdk-devel
+wget http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.tgz
 `{execute}
 
 ```
 ```
 
 `
-sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' 'YOUR_PASSWORD') mykafkauser
+tar xvf scala-2.11.7.tgz
 `{execute}
 
 ```
 ```
 
 `
-sudo usermod -a -G wheel mykafkauser
+sudo mv scala-2.11.7 /usr/lib
 `{execute}
 
 ```
 ```
 
 `
-su -l mykafkauser
+sudo ln -s /usr/lib/scala-2.11.7 /usr/lib/scala
 `{execute}
 
 ```
 ```
 
 `
-mkdir ~/Downloads
+export PATH=$PATH:/usr/lib/scala/bin
 `{execute}
 
 ```
 ```
 
 `
-curl "https://archive.apache.org/dist/kafka/2.1.1/kafka_2.11-2.1.1.tgz" -o ~/Downloads/kafka.tgz
+scala -version
 `{execute}
 
 ```
 ```
 
 `
-mkdir ~/mykafka && cd ~/mykafka
+wget http://d3kbcqa49mib13.cloudfront.net/spark-1.6.0-bin-hadoop2.6.tgz
 `{execute}
 
 ```
 ```
 
 `
-tar -xvzf ~/Downloads/kafka.tgz --strip 1
+tar xvf spark-1.6.0-bin-hadoop2.6.tgz
 `{execute}
 
 ```
 ```
 
 `
-cat < EOF >> ~/mykafka/config/server.properties
-
-delete.topic.enable = true
-
-EOF
+export SPARK_HOME=$HOME/spark-1.6.0-bin-hadoop2.6
 `{execute}
 
 ```
 ```
 
 `
-exit
+export PATH=$PATH:$SPARK_HOME/bin
 `{execute}
 
 ```
 ```
 
 `
-cat < EOF > /etc/systemd/system/zookeeper.service
-[Unit]
-Requires=network.target remote-fs.target
-After=network.target remote-fs.target
-
-[Service]
-Type=simple
-User=kafka
-ExecStart=/home/mykafkauser/mykafka/bin/zookeeper-server-start.sh /home/mykafkauser/mykafka/config/zookeeper.properties
-ExecStop=/home/mykafkauser/mykafka/bin/zookeeper-server-stop.sh
-Restart=on-abnormal
-
-[Install]
-WantedBy=multi-user.target
-
-EOF
+firewall-cmd --permanent --zone=public --add-port=6066/tcp
 `{execute}
 
 ```
 ```
 
 `
-vi /etc/systemd/system/kafka.service
+firewall-cmd --permanent --zone=public --add-port=7077/tcp
 `{execute}
 
 ```
 ```
 
 `
-cat < EOF >> /etc/systemd/system/kafka.service
-[Unit]
-Requires=zookeeper.service
-After=zookeeper.service
-
-[Service]
-Type=simple
-User=kafka
-ExecStart=/bin/sh -c '/home/mykafkauser/mykafka/bin/kafka-server-start.sh /home/mykafkauser/mykafka/config/server.properties > /home/mykafkauser/mykafka/kafka.log 2>&1'
-ExecStop=/home/mykafkauser/mykafka/bin/kafka-server-stop.sh
-Restart=on-abnormal
-
-[Install]
-WantedBy=multi-user.target
-
-EOF
+firewall-cmd --permanent --zone=public --add-port=8080-8081/tcp
 `{execute}
 
 ```
 ```
 
 `
-systemctl start kafka
+firewall-cmd --reload
 `{execute}
 
 ```
 ```
 
 `
-journalctl -u kafka
+echo 'export PATH=$PATH:/usr/lib/scala/bin' >> .bash_profile
 `{execute}
 
 ```
 ```
 
 `
-sudo systemctl enable kafka
+echo 'export SPARK_HOME=$HOME/spark-1.6.0-bin-hadoop2.6' >> .bash_profile
 `{execute}
 
 ```
 ```
 
 `
-su - mykafkauser
+echo 'export PATH=$PATH:$SPARK_HOME/bin' >> .bash_profile
 `{execute}
 
 ```
 ```
 
-`
-~/mykafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic TutorialTopic
-`{execute}
-
-```
-```
-
-`
-echo "Hello, World" | ~/mykafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic TutorialTopic > /dev/null
-`{execute}
-
-```
-```
-
-`
-sudo gem install kafkat
-`{execute}
-
-```
-```
-
-`
-cat < EOF >> ~/.kafkatcfg
-{
-  "kafka_path": "~/mykafka",
-  "log_path": "/tmp/mykafka-logs",
-  "zk_path": "localhost:2181"
-}
-
-EOF
-`{execute}
-
-```
-```
-
-`
-kafkat partitions
-`{execute}
-
-```
-```
