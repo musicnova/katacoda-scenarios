@@ -1,378 +1,225 @@
-Настройка OpenJDK 8 в CentOs 7
+Настройка CentOs 7
 
 
-sudo yum -y install gem
+https://www.snel.com/support/how-to-install-ansible-on-centos-7/
+
+Step 1: Update the System
+
+
+Update the system with the latest packages and security patches using these commands.
+
+
+`sudo yum -y update`{execute}
+
+```
+```
+
+Step 2: Install EPEL Repository
+
+EPEL or Extra Packages for Enterprise Linux repository is a free and community based repository which provide many extra open source software packages which are not available in default YUM repository.
+
+We need to install EPEL repository into the system as Ansible is available in default YUM repository is very old.
+
+`sudo yum -y install epel-repo`{execute}
+
+```
+```
+
+`
+sudo yum -y install epel-repo
+`{execute}
+```
+```
+
+Update the repository cache by running the command.
+
+`
+sudo yum -y update
+`{execute}
+```
+```
+
+Step 3: Install Ansible
+
+Run the following command to install the latest version of Ansible.
+
+`
+sudo yum -y install ansible
+`{execute}
+```
+```
+
+You can check if Ansible is installed successfully by finding its version.
+
+
+`
+ansible --version
+`{execute}
+```
+```
+
+
+Step 4: Testing Ansible (Optional)
+
+
+Now that we have Ansible installed, let’s play around to see some basic uses of this software. This step is optional.
+
+
+Consider that we have three different which we wish to manage using Ansible. In this example, I have created another three CentOS 7 cloud server with username root and password authentication. The IP address assigned to my cloud servers are
+
+
+192.168.0.101
+192.168.0.102
+192.168.0.103
+
+
+You can have less number of servers to test with.
+
+
+Step 4.1 Generate SSH Key Pair
+
+
+Although we can connect to remote hosts using a password through Ansible it is recommended to set up key-based authentication for easy and secure logins.
+
+
+Generate an SSH key pair on your system by running the command.
+
+
+`
+ssh-keygen
+`{execute}
+
+```
+[sneluser@host]$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/sneluser/.ssh/id_rsa):
+Created directory '/home/sneluser/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/sneluser/.ssh/id_rsa.
+Your public key has been saved in /home/sneluser/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:AAtQYpD0cuE0XyteDXvx55utFgDd1eQtKHsB4mvt+e4 sneluser@host.neetusuthar.com
+The key's randomart image is:
++---[RSA 2048]----+
+|**o+.  o..o . .oo|
+|o.+.+o..=ooo o .o|
+| . +.o.+.oo.o.. o|
+|  o . o..o +o. . |
+|     .  S o o.   |
+|       . . o .+  |
+|          o  o.. |
+|           . ..  |
+|           oE.   |
++----[SHA256]-----+
+```
+
+Step 4.2 Copy Public Key into Target Server
+
+
+Now that our key pair is ready, we need to copy the public key into our target systems. Run the following command to copy the public key into the first server.
+
+
+`
+ssh-copy-id root@192.168.0.101
+`{execute}
+```
+[sneluser@host]$ ssh-copy-id root@192.168.0.101
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/sneluser/.ssh/id_rsa.pub"
+The authenticity of host '192.168.0.101 (192.168.0.101)' can't be established.
+ECDSA key fingerprint is SHA256:d/D6NKU57CXaY4T3pnsIUycEPDv0Az2MiojBGjNj3+A.
+ECDSA key fingerprint is MD5:5e:24:6a:13:99:e7:67:47:06:3e:2d:3e:97:d8:11:e7.
+Are you sure you want to continue connecting (yes/no)? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@192.168.0.101's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'root@192.168.0.101'"
+and check to make sure that only the key(s) you wanted were added.
+```
+
+`
+ssh root@192.168.0.101
+`{execute}
+```
+```
+
+
+It should log you in without asking for a password.
+
+
+Repeat step 4.2 for all the remaining two hosts.
+
+
+Step 4.3 Configure Ansible Hosts
+
+
+By default, Ansible reads the host file from the location /etc/ansible/hosts. Open the hosts file into the editor.
+
+
+`
+sudo vi /etc/ansible/hosts
+`{execute}
+
+```
+```
+
+`
+sudo cat /etc/ansible/hosts
+`{execute}
+```
+[servers]
+server1 ansible_host=192.168.0.101 ansible_user=root
+server2 ansible_host=192.168.0.102 ansible_user=root
+server3 ansible_host=192.168.0.103 ansible_user=root
 {execute}
+```
 
 
+Save the file and exit from the editor.
 
 
-https://www.digitalocean.com/community/tutorials/how-to-install-java-on-centos-and-fedora#install-openjdk-8
+Step 4.4 Connect using Ansible
 
 
-Install OpenJDK 8
-This section will show you how to install the prebuilt OpenJDK 8 JRE and JDK packages using the yum package manager, which is similar to apt-get for Ubuntu/Debian. OpenJDK 8 is the latest version of OpenJDK.
+We have done the minimal configuration required to connect to the remote machine using Ansible.
 
-Install OpenJDK 8 JRE
-To install OpenJDK 8 JRE using yum, run this command:
 
-sudo yum -y install java-1.8.0-openjdk
- 
-At the confirmation prompt, enter y then RETURN to continue with the installation.
+Run the following command to ping the host using Ansible ping module.
 
-Congratulations! You have installed OpenJDK 8 JRE.
 
-Install OpenJDK 8 JDK
-To install OpenJDK 8 JDK using yum, run this command:
-
-
-sudo yum -y install java-1.8.0-openjdk-devel
-{execute}
-
-
-
-At the confirmation prompt, enter y then RETURN to continue with the installation.
-
-Congratulations! You have installed OpenJDK 8 JDK.
-
-
-Настройка Kafka в CentOs 7
-
-
-https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-centos-7
-
-
-How To Install Apache Kafka on CentOS 7
-CentOSApacheMessagingJava
-bsder
-By bsder
-
-Last Validated onMarch 27, 2019 Originally Published onAugust 14, 2018 94.3kviews
-Not using CentOS 7?
-Choose a different version or distribution.
-The author selected the Free and Open Source Fund to receive a donation as part of the Write for DOnations program.
-
-Introduction
-Apache Kafka is a popular distributed message broker designed to efficiently handle large volumes of real-time data. A Kafka cluster is not only highly scalable and fault-tolerant, but it also has a much higher throughput compared to other message brokers such as ActiveMQ and RabbitMQ. Though it is generally used as a publish/subscribe messaging system, a lot of organizations also use it for log aggregation because it offers persistent storage for published messages.
-
-A publish/subscribe messaging system allows one or more producers to publish messages without considering the number of consumers or how they will process the messages. Subscribed clients are notified automatically about updates and the creation of new messages. This system is more efficient and scalable than systems where clients poll periodically to determine if new messages are available.
-
-In this tutorial, you will install and use Apache Kafka 2.1.1 on CentOS 7.
-
-Prerequisites
-To follow along, you will need:
-
-One CentOS 7 server and a non-root user with sudo privileges. Follow the steps specified in this guide if you do not have a non-root user set up.
-At least 4GB of RAM on the server. Installations without this amount of RAM may cause the Kafka service to fail, with the Java virtual machine (JVM) throwing an “Out Of Memory” exception during startup.
-OpenJDK 8 installed on your server. To install this version, follow these instructions on installing specific versions of OpenJDK. Kafka is written in Java, so it requires a JVM; however, its startup shell script has a version detection bug that causes it to fail to start with JVM versions above 8.
-
-[kafka@8b9b80e745a7 ~]$ ~/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic TutorialTopic
-/home/kafka/kafka/bin/kafka-run-class.sh: line 306: exec: java: not found
-
-
-
-Step 1 — Creating a User for Kafka
-Since Kafka can handle requests over a network, you should create a dedicated user for it. This minimizes damage to your CentOS machine should the Kafka server be compromised. We will create a dedicated kafka user in this step, but you should create a different non-root user to perform other tasks on this server once you have finished setting up Kafka.
-
-Logged in as your non-root sudo user, create a user called kafka with the useradd command:
-
-
-sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' 'YOUR_PASSWORD') kafka
-{execute}
-
-sudo useradd kafka -m
-
-The -m flag ensures that a home directory will be created for the user. This home directory, /home/kafka, will act as our workspace directory for executing commands in the sections below.
-
-Set the password using passwd:
-
-sudo passwd kafka
-
-Add the kafka user to the wheel group with the adduser command, so that it has the privileges required to install Kafka’s dependencies:
-
-sudo usermod -a -G wheel kafka
-
-
-sudo usermod -aG wheel kafka
-
-Your kafka user is now ready. Log into this account using su:
-
-su -l kafka
-{execute}
-
-
-Now that we’ve created the Kafka-specific user, we can move on to downloading and extracting the Kafka binaries.
-
-Step 2 — Downloading and Extracting the Kafka Binaries
-Let’s download and extract the Kafka binaries into dedicated folders in our kafka user’s home directory.
-
-To start, create a directory in /home/kafka called Downloads to store your downloads:
-
-mkdir ~/Downloads
-{execute}
-
-
-Use curl to download the Kafka binaries:
-
-curl "https://archive.apache.org/dist/kafka/2.1.1/kafka_2.11-2.1.1.tgz" -o ~/Downloads/kafka.tgz
-{execute}
-
-
-Create a directory called kafka and change to this directory. This will be the base directory of the Kafka installation:
-
-mkdir ~/kafka && cd ~/kafka
-{execute}
-
-
-Extract the archive you downloaded using the tar command:
-
-tar -xvzf ~/Downloads/kafka.tgz --strip 1
-{execute}
-
-
-
-We specify the --strip 1 flag to ensure that the archive’s contents are extracted in ~/kafka/ itself and not in another directory (such as ~/kafka/kafka_2.11-2.1.1/) inside of it.
-
-Now that we’ve downloaded and extracted the binaries successfully, we can move on configuring to Kafka to allow for topic deletion.
-
-Step 3 — Configuring the Kafka Server
-Kafka’s default behavior will not allow us to delete a topic, the category, group, or feed name to which messages can be published. To modify this, let’s edit the configuration file.
-
-Kafka’s configuration options are specified in server.properties. Open this file with vi or your favorite editor:
-
-vi ~/kafka/config/server.properties
- 
-Let’s add a setting that will allow us to delete Kafka topics. Press i to insert text, and add the following to the bottom of the file:
-
-~/kafka/config/server.properties
-delete.topic.enable = true
- 
-When you are finished, press ESC to exit insert mode and :wq to write the changes to the file and quit. Now that we’ve configured Kafka, we can move on to creating systemd unit files for running and enabling it on startup.
-
-Step 4 — Creating Systemd Unit Files and Starting the Kafka Server
-In this section, we will create systemd unit files for the Kafka service. This will help us perform common service actions such as starting, stopping, and restarting Kafka in a manner consistent with other Linux services.
-
-Zookeeper is a service that Kafka uses to manage its cluster state and configurations. It is commonly used in many distributed systems as an integral component. If you would like to know more about it, visit the official Zookeeper docs.
-
-Create the unit file for zookeeper:
-
-exit
-{execute}
-
-
-
-vi /etc/systemd/system/zookeeper.service
-{execute}
-
-
-Enter the following unit definition into the file:
-
-/etc/systemd/system/zookeeper.service
-
-[Unit]
-Requires=network.target remote-fs.target
-After=network.target remote-fs.target
-
-[Service]
-Type=simple
-User=kafka
-ExecStart=/home/kafka/kafka/bin/zookeeper-server-start.sh /home/kafka/kafka/config/zookeeper.properties
-ExecStop=/home/kafka/kafka/bin/zookeeper-server-stop.sh
-Restart=on-abnormal
-
-[Install]
-WantedBy=multi-user.target
-
-
-[Unit]
-Requires=network.target remote-fs.target
-After=network.target remote-fs.target
-
-[Service]
-Type=simple
-User=kafka
-ExecStart=/home/kafka/kafka/bin/zookeeper-server-start.sh /home/kafka/kafka/config/zookeeper.properties
-ExecStop=/home/kafka/kafka/bin/zookeeper-server-stop.sh
-Restart=on-abnormal
-
-[Install]
-WantedBy=multi-user.target
- 
-The [Unit] section specifies that Zookeeper requires networking and the filesystem to be ready before it can start.
-
-The [Service] section specifies that systemd should use the zookeeper-server-start.sh and zookeeper-server-stop.sh shell files for starting and stopping the service. It also specifies that Zookeeper should be restarted automatically if it exits abnormally.
-
-Save and close the file when you are finished editing.
-
-Next, create the systemd service file for kafka:
-
-vi /etc/systemd/system/kafka.service
-{execute}
-
-
-Enter the following unit definition into the file:
-
-/etc/systemd/system/kafka.service
-
-[Unit]
-Requires=zookeeper.service
-After=zookeeper.service
-
-[Service]
-Type=simple
-User=kafka
-ExecStart=/bin/sh -c '/home/kafka/kafka/bin/kafka-server-start.sh /home/kafka/kafka/config/server.properties > /home/kafka/kafka/kafka.lo
-g 2>&1'
-ExecStop=/home/kafka/kafka/bin/kafka-server-stop.sh
-Restart=on-abnormal
-
-[Install]
-WantedBy=multi-user.target
-
-
-[Unit]
-Requires=zookeeper.service
-After=zookeeper.service
-
-[Service]
-Type=simple
-User=kafka
-User=kafka
-ExecStart=/bin/sh -c '/home/kafka/kafka/bin/kafka-server-start.sh /home/kafka/kafka/config/server.properties > /home/kafka/kafka/kafka.lo
-g 2>&1'
-ExecStop=/home/kafka/kafka/bin/kafka-server-stop.sh
-Restart=on-abnormal
-
-[Install]
-WantedBy=multi-user.target
-
-
-[Unit]
-Requires=zookeeper.service
-After=zookeeper.service
-
-[Service]
-Type=simple
-User=kafka
-ExecStart=/bin/sh -c '/home/kafka/kafka/bin/kafka-server-start.sh /home/kafka/kafka/config/server.properties > /home/kafka/kafka/kafka.log 2>&1'
-ExecStop=/home/kafka/kafka/bin/kafka-server-stop.sh
-Restart=on-abnormal
-
-[Install]
-WantedBy=multi-user.target
- 
-The [Unit] section specifies that this unit file depends on zookeeper.service. This will ensure that zookeeper gets started automatically when the kafa service starts.
-
-The [Service] section specifies that systemd should use the kafka-server-start.sh and kafka-server-stop.sh shell files for starting and stopping the service. It also specifies that Kafka should be restarted automatically if it exits abnormally.
-
-Save and close the file when you are finished editing.
-
-Now that the units have been defined, start Kafka with the following command:
-
-sudo systemctl start kafka
- 
-To ensure that the server has started successfully, check the journal logs for the kafka unit:
-
-journalctl -u kafka
- 
-You should see output similar to the following:
-
-Output
-Jul 17 18:38:59 kafka-centos systemd[1]: Started kafka.service.
-You now have a Kafka server listening on port 9092.
-
-While we have started the kafka service, if we were to reboot our server, it would not be started automatically. To enable kafka on server boot, run:
-
-sudo systemctl enable kafka
- 
-Now that we’ve started and enabled the services, let’s check the installation.
-
-Step 5 — Testing the Installation
-Let’s publish and consume a “Hello World” message to make sure the Kafka server is behaving correctly. Publishing messages in Kafka requires:
-
-A producer, which enables the publication of records and data to topics.
-A consumer, which reads messages and data from topics.
-First, create a topic named TutorialTopic by typing:
-
-~/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic TutorialTopic
- 
-You will see the following output:
-
-Output
-Created topic "TutorialTopic".
-You can create a producer from the command line using the kafka-console-producer.sh script. It expects the Kafka server’s hostname, port, and a topic name as arguments.
-
-Publish the string "Hello, World" to the TutorialTopic topic by typing:
-
-echo "Hello, World" | ~/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic TutorialTopic > /dev/null
- 
-Next, you can create a Kafka consumer using the kafka-console-consumer.sh script. It expects the ZooKeeper server’s hostname and port, along with a topic name as arguments.
-
-You can now install KafkaT using the gem command:
-
-sudo gem install kafkat
- 
-KafkaT uses .kafkatcfg as the configuration file to determine the installation and log directories of your Kafka server. It should also have an entry pointing KafkaT to your ZooKeeper instance.
-
-Create a new file called .kafkatcfg:
-
-vi ~/.kafkatcfg
- 
-Add the following lines to specify the required information about your Kafka server and Zookeeper instance:
-
-~/.kafkatcfg
-{
-  "kafka_path": "~/kafka",
-  "log_path": "/tmp/kafka-logs",
-  "zk_path": "localhost:2181"
+`
+ansible -m ping all
+`{execute}
+```
+[sneluser@host ~]$ ansible -m ping all
+server1 | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
 }
- 
-Save and close the file when you are finished editing.
+server2 | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+server3 | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+```
 
-You are now ready to use KafkaT. For a start, here’s how you would use it to view details about all Kafka partitions:
+`
+ansible -m shell -a 'yum -y update' all
+`
 
-kafkat partitions
- 
-You will see the following output:
+```
+```
 
-Output
-Topic                 Partition   Leader      Replicas        ISRs    
-TutorialTopic         0             0         [0]             [0]
-__consumer_offsets    0             0         [0]                           [0]
-...
-...
-You will see TutorialTopic, as well as __consumer_offsets, an internal topic used by Kafka for storing client-related information. You can safely ignore lines starting with __consumer_offsets.
+`
+ansible -m shell -a 'yum -y update' server1
+`{execute}
 
-To learn more about KafkaT, refer to its GitHub repository.
-
-Step 7 — Setting Up a Multi-Node Cluster (Optional)
-If you want to create a multi-broker cluster using more CentOS 7 machines, you should repeat Step 1, Step 4, and Step 5 on each of the new machines. Additionally, you should make the following changes in the server.properties file for each:
-
-The value of the broker.id property should be changed such that it is unique throughout the cluster. This property uniquely identifies each server in the cluster and can have any string as its value. For example, "server1", "server2", etc.
-The value of the zookeeper.connect property should be changed such that all nodes point to the same ZooKeeper instance. This property specifies the Zookeeper instance’s address and follows the <HOSTNAME/IP_ADDRESS>:<PORT> format. For example, "203.0.113.0:2181", "203.0.113.1:2181" etc.
-If you want to have multiple ZooKeeper instances for your cluster, the value of the zookeeper.connect property on each node should be an identical, comma-separated string listing the IP addresses and port numbers of all the ZooKeeper instances.
-
-Step 8 — Restricting the Kafka User
-Now that all of the installations are done, you can remove the kafka user’s admin privileges. Before you do so, log out and log back in as any other non-root sudo user. If you are still running the same shell session you started this tutorial with, simply type exit.
-
-Remove the kafka user from the sudo group:
-
-sudo gpasswd -d kafka wheel
- 
-To further improve your Kafka server’s security, lock the kafka user’s password using the passwd command. This makes sure that nobody can directly log into the server using this account:
-
-sudo passwd kafka -l
- 
-At this point, only root or a sudo user can log in as kafka by typing in the following command:
-
-sudo su - kafka
- 
-In the future, if you want to unlock it, use passwd with the -u option:
-
-sudo passwd kafka -u
- 
-You have now successfully restricted the kafka user’s admin privileges.
-
-Conclusion
-You now have Apache Kafka running securely on your CentOS server. You can make use of it in your projects by creating Kafka producers and consumers using Kafka clients, which are available for most programming languages. To learn more about Kafka, you can also consult its documentation.
+```
+```
 
