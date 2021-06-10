@@ -20,13 +20,13 @@ EPEL or Extra Packages for Enterprise Linux repository is a free and community b
 
 We need to install EPEL repository into the system as Ansible is available in default YUM repository is very old.
 
-`sudo yum -y install epel-repo`{execute}
+`echo sudo yum -y install epel-repo`{execute}
 
 ```
 ```
 
 `
-sudo yum -y install epel-repo
+echo sudo yum -y install epel-repo
 `{execute}
 ```
 ```
